@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bots", "Bots", "{C9AA7596-9901-4497-B4D0-648AACE7FC41}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreerollBot", "Bots\FreerollBot\FreerollBot.vcxproj", "{C66A8BBA-7BFF-4583-AB9D-D3741F8CBA90}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C66A8BBA-7BFF-4583-AB9D-D3741F8CBA90}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C66A8BBA-7BFF-4583-AB9D-D3741F8CBA90}.Debug|Win32.Build.0 = Debug|Win32
+		{C66A8BBA-7BFF-4583-AB9D-D3741F8CBA90}.Release|Win32.ActiveCfg = Release|Win32
+		{C66A8BBA-7BFF-4583-AB9D-D3741F8CBA90}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C66A8BBA-7BFF-4583-AB9D-D3741F8CBA90} = {C9AA7596-9901-4497-B4D0-648AACE7FC41}
+	EndGlobalSection
+EndGlobal
