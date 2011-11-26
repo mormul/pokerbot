@@ -5,6 +5,7 @@
 #include "FreerollStrategy.h"
 
 #include <src/gtest-all.cc>
+#include <src/gmock-all.cc>
 
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -12,3 +13,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	return RUN_ALL_TESTS();
 }
 
+class FreerollSrategyTests : public ::testing::Test
+{
+protected:
+	FreerollSrategyTests(void) { }
+};
+
+TEST_F(FreerollSrategyTests, first_test)
+{
+	ASSERT_EQ(0, 0);
+}
