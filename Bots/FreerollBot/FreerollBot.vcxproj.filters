@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>MainFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="FreerollBot.cpp">
+      <Filter>MainFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>MainFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="FreerollStrategy.cpp">
+      <Filter>Strategy</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="targetver.h">
+      <Filter>MainFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="FreerollBot.h">
+      <Filter>MainFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>MainFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="FreerollStrategy.h">
+      <Filter>Strategy</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="MainFiles">
+      <UniqueIdentifier>{7464ce4c-4514-456f-a9fb-ca12cba29927}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Strategy">
+      <UniqueIdentifier>{3cd3887b-c67c-4e10-9a10-fcec2a79953c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

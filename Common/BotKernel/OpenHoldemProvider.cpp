@@ -1,14 +1,16 @@
 #include "StdAfx.h"
-#include "OpenHoldemProvider.h"
 
-#include "Reference User DLL\user.h"
-#include "poker_defs.h"
-#include "deck_std.h"
+#include <Reference User DLL\user.h>
+#include <poker_defs.h>
+#include <deck_std.h>
+
+#include "OpenHoldemProvider.h"
+#include "IOpenHoldemStrategy.h"
 
 class OpenHoldemProviderImpl
 {
 public:
-	OpenHoldemProviderImpl() { }
+	OpenHoldemProviderImpl() : 	_p_get_symbol(0), _ndx(0) { }
 	~OpenHoldemProviderImpl() { }
 	void SetCallBack(p_getsym_t p_get_symbol) { _p_get_symbol = p_get_symbol; }
 
@@ -47,6 +49,7 @@ private:
 };
 
 OpenHoldemProvider::OpenHoldemProvider(void)
+	: _pImpl(NULL), _pStrategy(NULL)
 {
 	_pImpl = new OpenHoldemProviderImpl();
 }
@@ -71,19 +74,18 @@ double OpenHoldemProvider::ProcessMessage(const char* pmessage, const void* para
 
 	if(strcmp(pmessage, "state") == 0)
 	{
-		//theProvider.ProcessState(reinterpret_cast<holdem_state*>(const_cast<void*>(param)));
+		_pImpl->ProcessState(reinterpret_cast<holdem_state*>(const_cast<void*>(param)));
 		return 0;
 	}
 
 	if(strcmp(pmessage, "query") == 0)
 	{ 
-		//return process_query(static_cast<const char*>(param));
-		return 0;
+		return _pStrategy->ProcessQuery(static_cast<const char*>(param));
 	}
 
 	if(strcmp(pmessage, "pfgws") == 0)
 	{
-		//theProvider.SetCallBack(reinterpret_cast<p_getsym_t>(const_cast<void*>(param)));
+		_pImpl->SetCallBack(reinterpret_cast<p_getsym_t>(const_cast<void*>(param)));
 		return 0;
 	}
 

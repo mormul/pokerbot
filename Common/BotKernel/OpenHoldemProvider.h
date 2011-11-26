@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 
+class IOpenHoldemStrategy;
 class OpenHoldemProviderImpl;
 
 enum BetRound
@@ -16,6 +17,8 @@ class OpenHoldemProvider
 public:
 	OpenHoldemProvider(void);
 	~OpenHoldemProvider(void);
+
+	void SetStrategy(const IOpenHoldemStrategy * pStrategy) { _pStrategy = pStrategy; }
 
 	double ProcessMessage(const char* pmessage, const void* param) const;
 
@@ -54,5 +57,6 @@ private:
 	OpenHoldemProvider & operator=(OpenHoldemProvider &);
 
 	OpenHoldemProviderImpl * _pImpl;
+	const IOpenHoldemStrategy * _pStrategy;
 };
 
