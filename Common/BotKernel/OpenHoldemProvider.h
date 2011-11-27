@@ -1,7 +1,6 @@
 #pragma once
-#include <memory>
+#include "IOpenHoldemProvider.h"
 
-class IOpenHoldemStrategy;
 class OpenHoldemProviderImpl;
 
 enum BetRound
@@ -12,20 +11,24 @@ enum BetRound
 	BetRoundRiver = 4
 };
 
-class OpenHoldemProvider
+class OpenHoldemProvider : public IOpenHoldemProvider
 {
 public:
 	OpenHoldemProvider(void);
-	~OpenHoldemProvider(void);
+	virtual ~OpenHoldemProvider(void);
 
-	void SetStrategy(const IOpenHoldemStrategy * pStrategy) { _pStrategy = pStrategy; }
 
 	double ProcessMessage(const char* pmessage, const void* param) const;
 
+	virtual const bool GetFlagButtonState(int index) const;
+	virtual const bool TestHand(const char * pHand) const;
+	virtual const bool TestHand(const char * pHand0, const char * pHand1) const;
+	virtual const bool TestHand(const char * pHand0, const char * pHand1, const char * pHand2) const;
+	virtual const bool TestHand(const char * pHand0, const char * pHand1, const char * pHand2, const char * pHand3) const;
 	const bool IsSeatIn(void) const;
 	const double GetActiveSeatsCount(void) const;
-	const double GetBalance(void) const;
-	const double GetBigBlind(void) const;
+	virtual const double GetBalance(void) const;
+	virtual const double GetBigBlind(void) const;
 	const BetRound GetBetRound(void) const;
 	const int GetPosition(void) const;
 	const int GetDealPosition(void) const;
@@ -57,6 +60,5 @@ private:
 	OpenHoldemProvider & operator=(OpenHoldemProvider &);
 
 	OpenHoldemProviderImpl * _pImpl;
-	const IOpenHoldemStrategy * _pStrategy;
 };
 

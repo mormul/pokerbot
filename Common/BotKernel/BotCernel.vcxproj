@@ -70,6 +70,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="IOpenHoldemProvider.h" />
     <ClInclude Include="IOpenHoldemStrategy.h" />
     <ClInclude Include="OpenHoldemProvider.h" />
     <ClInclude Include="stdafx.h" />

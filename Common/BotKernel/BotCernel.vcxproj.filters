@@ -24,6 +24,9 @@
     <ClInclude Include="IOpenHoldemStrategy.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="IOpenHoldemProvider.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

@@ -49,7 +49,7 @@ private:
 };
 
 OpenHoldemProvider::OpenHoldemProvider(void)
-	: _pImpl(NULL), _pStrategy(NULL)
+	:_pImpl(NULL)
 {
 	_pImpl = new OpenHoldemProviderImpl();
 }
@@ -92,6 +92,40 @@ double OpenHoldemProvider::ProcessMessage(const char* pmessage, const void* para
 	return 0;
 }
 
+#include <string>
+template <typename T>
+std::string Format(std::string format, T val1)
+{
+	char buffer[512];
+	sprintf_s(buffer, sizeof(buffer), format.c_str(), val1);
+	return buffer;
+}
+
+const bool OpenHoldemProvider::GetFlagButtonState(int index) const
+{
+	return _pImpl->GetSymbol(Format("f%d", index).c_str()) != 0;
+}
+
+const bool OpenHoldemProvider::TestHand(const char * pHand) const
+{
+	return _pImpl->GetSymbol(Format("$%s", pHand).c_str()) != 0;
+}
+
+const bool OpenHoldemProvider::TestHand(const char * pHand0, const char * pHand1) const
+{
+	return TestHand(pHand0) || TestHand(pHand1);
+}
+
+const bool OpenHoldemProvider::TestHand(const char * pHand0, const char * pHand1, const char * pHand2) const
+{
+	return TestHand(pHand0) || TestHand(pHand1) || TestHand(pHand2);
+}
+
+const bool OpenHoldemProvider::TestHand(const char * pHand0, const char * pHand1, const char * pHand2, const char * pHand3) const
+{
+	return TestHand(pHand0) || TestHand(pHand1) || TestHand(pHand2) || TestHand(pHand3);
+}
+
 const bool OpenHoldemProvider::IsSeatIn(void) const
 {
 	return _pImpl->GetSymbol("rankbits") != 0;
@@ -126,16 +160,6 @@ const int OpenHoldemProvider::GetPosition(void) const
 const int OpenHoldemProvider::GetDealPosition(void) const
 {
 	return static_cast<int>(_pImpl->GetSymbol("dealposition"));
-}
-
-#include <string>
-
-template <typename T>
-std::string Format(std::string format, T val1)
-{
-	char buffer[512];
-	sprintf_s(buffer, sizeof(buffer), format.c_str(), val1);
-	return buffer;
 }
 
 const bool OpenHoldemProvider::IsList(int number) const

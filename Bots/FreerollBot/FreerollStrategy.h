@@ -1,12 +1,27 @@
 #pragma once
 #include "IOpenHoldemStrategy.h"
 
-class FreerollStrategy :
-	public IOpenHoldemStrategy
+enum TourneyStage
+{
+	TourneyStageUnknown,
+	TourneyStageEarly,
+	TourneyStageLate,
+	TourneyStageFinal
+};
+
+class FreerollStrategy : public IOpenHoldemStrategy
 {
 public:
 	FreerollStrategy(void);
 	virtual ~FreerollStrategy(void);
-	virtual double ProcessQuery(const char* pQuery) const;
+
+	virtual double GetSwag(void) const;
+	virtual double GetSrai(void) const;
+	virtual bool GetCall(void) const;
+	virtual bool GetRais(void) const;
+	virtual bool GetAllin(void) const;
+
+	__declspec(property(get=TourneyStage_get)) TourneyStage TourneyStage;
+	::TourneyStage TourneyStage_get(void) const;
 };
 
