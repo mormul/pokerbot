@@ -1,42 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="MainFiles">
-      <UniqueIdentifier>{a61d138f-5100-4f74-8a00-d62d5fa0ca9a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="FreerollSrategyTests">
-      <UniqueIdentifier>{3ee54657-cc2c-437a-aa87-24d047be86d0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="OpenHoldemProviderMock">
-      <UniqueIdentifier>{3f150b8e-8798-418b-8dd2-14b9b0960cd9}</UniqueIdentifier>
-    </Filter>
+    <ClInclude Include="OpenHoldemProviderMock.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>MainFiles</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>MainFiles</Filter>
-    </ClInclude>
-    <ClInclude Include="FreerollStrategyTests.h">
-      <Filter>FreerollSrategyTests</Filter>
-    </ClInclude>
-    <ClInclude Include="OpenHoldemProviderMock.h">
-      <Filter>OpenHoldemProviderMock</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>MainFiles</Filter>
-    </ClCompile>
-    <ClCompile Include="FreerollBotTests.cpp">
-      <Filter>MainFiles</Filter>
-    </ClCompile>
-    <ClCompile Include="FreerollStrategyTests.cpp">
-      <Filter>FreerollSrategyTests</Filter>
-    </ClCompile>
-    <ClCompile Include="OpenHoldemProviderMock.cpp">
-      <Filter>OpenHoldemProviderMock</Filter>
-    </ClCompile>
+    <ClCompile Include="FreerollBotTests.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="FreerollStrategyTests.cpp" />
   </ItemGroup>
 </Project>

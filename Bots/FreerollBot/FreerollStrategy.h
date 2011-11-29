@@ -23,5 +23,8 @@ public:
 
 	__declspec(property(get=TourneyStage_get)) TourneyStage TourneyStage;
 	::TourneyStage TourneyStage_get(void) const;
+
+private:
+	bool IsRaisedPot(void) const;
 };
 
