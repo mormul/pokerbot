@@ -10,14 +10,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreerollBot", "Bots\Freerol
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{37D0E7A7-AAA2-4871-BC35-D1CCC5E24115}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BotKernel", "Common\BotKernel\BotCernel.vcxproj", "{BB324EC2-263D-4568-A02B-9F6308AFD950}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4D804642-BA8C-4949-A52C-3D064C849BEA}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreerollBotTests", "Tests\FreerollBotTests\FreerollBotTests.vcxproj", "{68103B0A-679F-40CD-A784-AB760EC1A332}"
 	ProjectSection(ProjectDependencies) = postProject
 		{C66A8BBA-7BFF-4583-AB9D-D3741F8CBA90} = {C66A8BBA-7BFF-4583-AB9D-D3741F8CBA90}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreBot", "Common\CoreBot\CoreBot.vcxproj", "{BB324EC2-263D-4568-A02B-9F6308AFD950}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,14 +29,14 @@ Global
 		{C66A8BBA-7BFF-4583-AB9D-D3741F8CBA90}.Debug|Win32.Build.0 = Debug|Win32
 		{C66A8BBA-7BFF-4583-AB9D-D3741F8CBA90}.Release|Win32.ActiveCfg = Release|Win32
 		{C66A8BBA-7BFF-4583-AB9D-D3741F8CBA90}.Release|Win32.Build.0 = Release|Win32
-		{BB324EC2-263D-4568-A02B-9F6308AFD950}.Debug|Win32.ActiveCfg = Debug|Win32
-		{BB324EC2-263D-4568-A02B-9F6308AFD950}.Debug|Win32.Build.0 = Debug|Win32
-		{BB324EC2-263D-4568-A02B-9F6308AFD950}.Release|Win32.ActiveCfg = Release|Win32
-		{BB324EC2-263D-4568-A02B-9F6308AFD950}.Release|Win32.Build.0 = Release|Win32
 		{68103B0A-679F-40CD-A784-AB760EC1A332}.Debug|Win32.ActiveCfg = Debug|Win32
 		{68103B0A-679F-40CD-A784-AB760EC1A332}.Debug|Win32.Build.0 = Debug|Win32
 		{68103B0A-679F-40CD-A784-AB760EC1A332}.Release|Win32.ActiveCfg = Release|Win32
 		{68103B0A-679F-40CD-A784-AB760EC1A332}.Release|Win32.Build.0 = Release|Win32
+		{BB324EC2-263D-4568-A02B-9F6308AFD950}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BB324EC2-263D-4568-A02B-9F6308AFD950}.Debug|Win32.Build.0 = Debug|Win32
+		{BB324EC2-263D-4568-A02B-9F6308AFD950}.Release|Win32.ActiveCfg = Release|Win32
+		{BB324EC2-263D-4568-A02B-9F6308AFD950}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

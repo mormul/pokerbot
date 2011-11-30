@@ -45,17 +45,35 @@ bool FreerollStrategy::GetRais(void) const
 
 bool FreerollStrategy::GetAllin(void) const
 {
-	if (_pProvider->TestHand("AA", "KK", "QQ", "AK"))
-		return true;
-	else if (_pProvider->TestHand("JJ", "AQ") && !IsRaisedPot())
-		return true;
-	else if (_pProvider->GetPreflopPosition() != PreflopPositionEarly
-			&& _pProvider->GetBalance() < 8 *_pProvider->GetBigBlind()
-			&& _pProvider->TestHand("66", "77", "88", "99", "TT")
-			&& !IsRaisedPot())
-		return true;
-	else
-		return false;
+	switch(_pProvider->GetBetRound())
+	{
+	case BetRoundPreflop:
+		{
+			if (_pProvider->TestHand("AA", "KK", "QQ", "AK"))
+				return true;
+			else if (_pProvider->TestHand("JJ", "AQ") && !IsRaisedPot())
+				return true;
+			else if (_pProvider->GetPreflopPosition() != PreflopPositionEarly
+					&& _pProvider->GetBalance() < 8 *_pProvider->GetBigBlind()
+					&& _pProvider->TestHand("66", "77", "88", "99", "TT")
+					&& !IsRaisedPot())
+				return true;
+		}
+	case BetRoundFlop:
+	case BetRoundRiver:
+	case BetRoundTurn:
+		{
+			if (_pProvider->IsMonster())
+				return true;
+			else if ((_pProvider->IsFlashDro() || _pProvider->IsOESD())
+				&& _pProvider->GetNumberOpponentsBetting() > 1)
+				return true;
+			else if ((_pProvider->IsTopPair() || _pProvider->IsOverPair())
+				&& _pProvider->GetNumberOpponentsBetting() < 3)
+				return true;
+		}
+	}
+	return false;
 }
 
 ::TourneyStage FreerollStrategy::TourneyStage_get(void) const

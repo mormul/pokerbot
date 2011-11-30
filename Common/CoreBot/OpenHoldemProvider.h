@@ -3,14 +3,6 @@
 
 class OpenHoldemProviderImpl;
 
-enum BetRound
-{
-	BetRoundPreflop = 1,
-	BetRoundFlop = 2,
-	BetRoundTurn = 3,
-	BetRoundRiver = 4
-};
-
 class OpenHoldemProvider : public IOpenHoldemProvider
 {
 public:
@@ -29,6 +21,7 @@ public:
 	virtual const bool TestHand(const char * pHand0, const char * pHand1, const char * pHand2, const char * pHand3, const char * pHand4) const;
 
 	virtual const double GetBigBlind(void) const;
+	virtual const BetRound GetBetRound(void) const;
 
 	virtual const double GetBalance(void) const;
 	virtual const double GetOpponentBalance(int chair) const;
@@ -37,17 +30,24 @@ public:
 
 	virtual const PreflopPosition GetPreflopPosition(void) const;
 
+	virtual const double GetNumberOpponentsChecking(void) const;
+	virtual const double GetNumberOpponentsCalling(void) const;
+	virtual const double GetNumberOpponentsRaising(void) const;
+	virtual const double GetNumberOpponentsBetting(void) const;
+	virtual const double GetNumberOpponentsFolded(void) const;
+
+	virtual const bool IsMiddlePair() const;
+	virtual const bool IsTopPair() const;
+	virtual const bool IsOverPair() const;
+	virtual const bool IsOESD() const;
+	virtual const bool IsFlashDro() const;
+	virtual const bool IsMonster() const;
+
 	//const bool IsSeatIn(void) const;
 	//const double GetActiveSeatsCount(void) const;
-	//const BetRound GetBetRound(void) const;
 	//const int GetPosition(void) const;
 	//const int GetDealPosition(void) const;
 	//const bool IsList(int number) const;
-	//const double GetNumberOpponentsChecking(void) const;
-	//const double GetNumberOpponentsCalling(void) const;
-	//const double GetNumberOpponentsRaising(void) const;
-	//const double GetNumberOpponentsBetting(void) const;
-	//const double GetNumberOpponentsFolded(void) const;
 	//const double GetNeedBetsToCall(void) const;
 	//const double GetCurrentBet(void) const;
 	//const int GetMyChair(void) const;
@@ -56,12 +56,6 @@ public:
 	//const double GetPlayerCurrentBet(int chair) const;
 	//const bool WasPlayerDidRaiseOnPreflop() const;
 	//const bool WasPlayerDidRaiseOnFlop() const;
-	//const bool IsMiddlePair() const;
-	//const bool IsTopPair() const;
-	//const bool IsOverPair() const;
-	//const bool IsOESD() const;
-	//const bool IsFlashDro() const;
-	//const bool IsMonster() const;
 	//const int GetKicker() const;
 	//const double GetPot() const;
 

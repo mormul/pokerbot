@@ -12,6 +12,7 @@ protected:
 		_strategy.SetProvider(&_provider);
 
 		ON_CALL(_provider, GetBigBlind()).WillByDefault(Return(2));
+		ON_CALL(_provider, GetBetRound()).WillByDefault(Return(BetRoundPreflop));
 		ON_CALL(_provider, GetBalance()).WillByDefault(Return(200));
 		ON_CALL(_provider, GetPreflopPosition()).WillByDefault(Return(PreflopPositionDealer));
 	}
@@ -201,16 +202,100 @@ TEST_F(FreerollStrategyTests, should_fold_with_22_33_44_55_AXs_KQs_QJs_JTs_T9s_9
 	EXPECT_EQ(_strategy.GetAllin(), false);
 }
 
-//Постфлоп
-//
 //После флопа всё упирается в один-единственный вопрос: у вас что-нибудь есть? Если нет, то вы сбрасываетесь на любую ставку.
+
+TEST_F(FreerollStrategyTests, fold_on_postflop_if_you_have_nothing)
+{
+	ON_CALL(_provider, IsMonster()).WillByDefault(Return(false));
+	ON_CALL(_provider, GetBetRound()).WillByDefault(Return(BetRoundFlop));
+	EXPECT_EQ(_strategy.GetSwag(), 0);
+	EXPECT_EQ(_strategy.GetSrai(), 0);
+	EXPECT_EQ(_strategy.GetCall(), false);
+	EXPECT_EQ(_strategy.GetRais(), false);
+	EXPECT_EQ(_strategy.GetAllin(), false);
+}
+
 //С двумя парами и более сильными комбинациями вы идёте олл-ин.
-//
-//С флеш-дро или двусторонним стрейт-дро (OESD) вы идёте олл-ин тогда, когда несколько оппонентов перед вами уже продолжили инвестировать фишки в банк.
-//
-//С так называемой топ-парой, парой, состоящей из одной из ваших стартовых карт и самой старшей карты борда, вы идёте олл-ин только тогда, когда у вас максимум 2 оппонента. В остальных случаях будьте очень осторожны с этой комбинацией. 
+
+TEST_F(FreerollStrategyTests, allin_on_postflop_if_you_have_monster)
+{
+	ON_CALL(_provider, GetBetRound()).WillByDefault(Return(BetRoundFlop));
+	ON_CALL(_provider, IsMonster()).WillByDefault(Return(true));
+	EXPECT_EQ(_strategy.GetSwag(), 200);
+	EXPECT_EQ(_strategy.GetSrai(), 200);
+	EXPECT_EQ(_strategy.GetCall(), true);
+	EXPECT_EQ(_strategy.GetRais(), true);
+	EXPECT_EQ(_strategy.GetAllin(), true);
+}
+
+//С флеш-дро или двусторонним стрейт-дро (OESD) вы идёте олл-ин тогда, когда несколько оппонентов перед вами
+//уже продолжили инвестировать фишки в банк.
+
+TEST_F(FreerollStrategyTests, allin_on_postflop_if_you_have_OESD_or_FlasDro_more_than_one_opponents)
+{
+	ON_CALL(_provider, GetBetRound()).WillByDefault(Return(BetRoundFlop));
+	ON_CALL(_provider, IsOESD()).WillByDefault(Return(true));
+	ON_CALL(_provider, IsFlashDro()).WillByDefault(Return(true));
+	ON_CALL(_provider, GetNumberOpponentsBetting()).WillByDefault(Return(2));
+	EXPECT_EQ(_strategy.GetSwag(), 200);
+	EXPECT_EQ(_strategy.GetSrai(), 200);
+	EXPECT_EQ(_strategy.GetCall(), true);
+	EXPECT_EQ(_strategy.GetRais(), true);
+	EXPECT_EQ(_strategy.GetAllin(), true);
+
+	ON_CALL(_provider, GetNumberOpponentsBetting()).WillByDefault(Return(1));
+	EXPECT_EQ(_strategy.GetSwag(), 0);
+	EXPECT_EQ(_strategy.GetSrai(), 0);
+	EXPECT_EQ(_strategy.GetCall(), false);
+	EXPECT_EQ(_strategy.GetRais(), false);
+	EXPECT_EQ(_strategy.GetAllin(), false);
+
+	ON_CALL(_provider, GetNumberOpponentsBetting()).WillByDefault(Return(0));
+	EXPECT_EQ(_strategy.GetSwag(), 0);
+	EXPECT_EQ(_strategy.GetSrai(), 0);
+	EXPECT_EQ(_strategy.GetCall(), false);
+	EXPECT_EQ(_strategy.GetRais(), false);
+	EXPECT_EQ(_strategy.GetAllin(), false);
+}
+
+//С так называемой топ-парой, парой, состоящей из одной из ваших стартовых карт и самой старшей карты борда,
+//вы идёте олл-ин только тогда, когда у вас максимум 2 оппонента. В остальных случаях будьте очень осторожны с этой комбинацией. 
+
+TEST_F(FreerollStrategyTests, allin_on_postflop_if_you_have_top_pair_and_2_or_less_opponents)
+{
+	ON_CALL(_provider, GetBetRound()).WillByDefault(Return(BetRoundFlop));
+	ON_CALL(_provider, IsTopPair()).WillByDefault(Return(true));
+	ON_CALL(_provider, IsOverPair()).WillByDefault(Return(true));
+	ON_CALL(_provider, GetNumberOpponentsBetting()).WillByDefault(Return(0));
+	EXPECT_EQ(_strategy.GetSwag(), 200);
+	EXPECT_EQ(_strategy.GetSrai(), 200);
+	EXPECT_EQ(_strategy.GetCall(), true);
+	EXPECT_EQ(_strategy.GetRais(), true);
+	EXPECT_EQ(_strategy.GetAllin(), true);
+
+	ON_CALL(_provider, GetNumberOpponentsBetting()).WillByDefault(Return(1));
+	EXPECT_EQ(_strategy.GetSwag(), 200);
+	EXPECT_EQ(_strategy.GetSrai(), 200);
+	EXPECT_EQ(_strategy.GetCall(), true);
+	EXPECT_EQ(_strategy.GetRais(), true);
+	EXPECT_EQ(_strategy.GetAllin(), true);
+
+	ON_CALL(_provider, GetNumberOpponentsBetting()).WillByDefault(Return(2));
+	EXPECT_EQ(_strategy.GetSwag(), 200);
+	EXPECT_EQ(_strategy.GetSrai(), 200);
+	EXPECT_EQ(_strategy.GetCall(), true);
+	EXPECT_EQ(_strategy.GetRais(), true);
+	EXPECT_EQ(_strategy.GetAllin(), true);
+
+	ON_CALL(_provider, GetNumberOpponentsBetting()).WillByDefault(Return(3));
+	EXPECT_EQ(_strategy.GetSwag(), 0);
+	EXPECT_EQ(_strategy.GetSrai(), 0);
+	EXPECT_EQ(_strategy.GetCall(), false);
+	EXPECT_EQ(_strategy.GetRais(), false);
+	EXPECT_EQ(_strategy.GetAllin(), false);
+}
+
 //Как играть в поздней стадии?
-//
 //Поздняя стадия начинается, когда у вас остаётся примерно 20-25 больших блайндов. Стратегия игры теперь называется "Рейз или Фолд". Это означает, что на префлопе вы либо делаете рейз, либо сбрасываетесь. Как только оппонент перед вами или после вас делает рейз или 3-бет, вы идёте олл-ин или сбрасываетесь. Олл-ин вы, конечно, идёте только с приемлемыми картами. Кнопка "Колл" теперь для вас под запретом.
 //
 //Особое внимание обратите на игроков с маленькими стэками. Против них вам нужна приличная рука, ведь они только и ждут момента, чтобы либо удвоиться, либо вылететь.
