@@ -36,8 +36,10 @@ public:
 	virtual const bool TestHand(const char * pHand0, const char * pHand1, const char * pHand2) const = 0;
 	virtual const bool TestHand(const char * pHand0, const char * pHand1, const char * pHand2, const char * pHand3) const = 0;
 	virtual const bool TestHand(const char * pHand0, const char * pHand1, const char * pHand2, const char * pHand3, const char * pHand4) const = 0;
+	virtual const bool TestHand(const char * pHand0, const char * pHand1, const char * pHand2, const char * pHand3, const char * pHand4, const char * pHand5) const = 0;
 
 	virtual const double GetBigBlind(void) const = 0;
+	virtual const double GetPot(void) const = 0;
 	virtual const BetRound GetBetRound(void) const = 0;
 
 	virtual const double GetBalance(void) const = 0;
@@ -53,12 +55,16 @@ public:
 	virtual const double GetNumberOpponentsBetting(void) const = 0;
 	virtual const double GetNumberOpponentsFolded(void) const = 0;
 
-	virtual const bool IsMiddlePair() const = 0;
-	virtual const bool IsTopPair() const = 0;
-	virtual const bool IsOverPair() const = 0;
-	virtual const bool IsOESD() const = 0;
-	virtual const bool IsFlashDro() const = 0;
-	virtual const bool IsMonster() const = 0;
+	virtual const bool IsMiddlePair(void) const = 0;
+	virtual const bool IsTopPair(void) const = 0;
+	virtual const bool IsOverPair(void) const = 0;
+	virtual const bool IsOESD(void) const = 0;
+	virtual const bool IsFlashDro(void) const = 0;
+	virtual const bool IsMonster(void) const = 0;
+
+	virtual const int GetRankHiPocketCard(void) const = 0;
+	virtual const int GetRankLoPocketCard(void) const = 0;
+	virtual const int GetRankHiCommonCard(void) const = 0;
 
 protected:
 	const IOpenHoldemStrategy * _pStrategy;

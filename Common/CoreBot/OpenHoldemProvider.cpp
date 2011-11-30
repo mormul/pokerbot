@@ -137,9 +137,19 @@ const bool OpenHoldemProvider::TestHand(const char * pHand0, const char * pHand1
 	return TestHand(pHand0) || TestHand(pHand1) || TestHand(pHand2) || TestHand(pHand3) || TestHand(pHand4);
 }
 
+const bool OpenHoldemProvider::TestHand(const char * pHand0, const char * pHand1, const char * pHand2, const char * pHand3, const char * pHand4, const char * pHand5) const
+{
+	return TestHand(pHand0) || TestHand(pHand1) || TestHand(pHand2) || TestHand(pHand3) || TestHand(pHand4) || TestHand(pHand5);
+}
+
 const double OpenHoldemProvider::GetBigBlind(void) const
 {
 	return _pImpl->GetSymbol("bblind");
+}
+
+const double OpenHoldemProvider::GetPot(void) const
+{
+	return _pImpl->GetSymbol("pot");
 }
 
 const BetRound OpenHoldemProvider::GetBetRound(void) const
@@ -197,32 +207,32 @@ const double OpenHoldemProvider::GetNumberOpponentsFolded(void) const
 	return _pImpl->GetSymbol("nopponentsfolded");
 }
 
-const bool OpenHoldemProvider::IsMiddlePair() const
+const bool OpenHoldemProvider::IsMiddlePair(void) const
 {
 	return (_pImpl->GetSymbol("ismidpair") == 1) && (_pImpl->GetSymbol("rankhicommon") < 14);
 }
 
-const bool OpenHoldemProvider::IsTopPair() const
+const bool OpenHoldemProvider::IsTopPair(void) const
 {
-	return (_pImpl->GetSymbol("ishipair") == 1) && (_pImpl->GetSymbol("nrankedcommon") != 2);
+	return (_pImpl->GetSymbol("nrankedcommon") != 2) && _pImpl->GetSymbol("ishipair");
 }
 
-const bool OpenHoldemProvider::IsOverPair() const
+const bool OpenHoldemProvider::IsOverPair(void) const
 {
-	return (_pImpl->GetSymbol("rankhiplayer") > _pImpl->GetSymbol("rankhicommon")) && _pImpl->GetSymbol("ispair");
+	return (GetRankHiPocketCard() > GetRankHiCommonCard()) && _pImpl->GetSymbol("ispair");
 }
 
-const bool OpenHoldemProvider::IsOESD() const
+const bool OpenHoldemProvider::IsOESD(void) const
 {
 	return _pImpl->GetSymbol("nstraight") == 4;
 }
 
-const bool OpenHoldemProvider::IsFlashDro() const
+const bool OpenHoldemProvider::IsFlashDro(void) const
 {
 	return _pImpl->GetSymbol("nsuited") == 4;
 }
 
-const bool OpenHoldemProvider::IsMonster() const
+const bool OpenHoldemProvider::IsMonster(void) const
 {
 	return _pImpl->GetSymbol("istwopair") == 1
 		|| _pImpl->GetSymbol("isthreeofakind") == 1
@@ -232,6 +242,21 @@ const bool OpenHoldemProvider::IsMonster() const
 		|| _pImpl->GetSymbol("isfourofakind") == 1
 		|| _pImpl->GetSymbol("isstraightflush") == 1
 		|| _pImpl->GetSymbol("isroyalflush") == 1;
+}
+
+const int OpenHoldemProvider::GetRankHiPocketCard(void) const
+{
+	return _pImpl->GetSymbol<int>("rankhiplayer");
+}
+
+const int OpenHoldemProvider::GetRankLoPocketCard(void) const
+{
+	return _pImpl->GetSymbol<int>("rankloplayer");
+}
+
+const int OpenHoldemProvider::GetRankHiCommonCard(void) const
+{
+	return _pImpl->GetSymbol<int>("rankhicommon");
 }
 
 //const bool OpenHoldemProvider::IsSeatIn(void) const
@@ -295,9 +320,4 @@ const bool OpenHoldemProvider::IsMonster() const
 //const int OpenHoldemProvider::GetKicker() const
 //{
 //	return static_cast<int>(_pImpl->GetSymbol("mh_kickerrank"));
-//}
-//
-//const double OpenHoldemProvider::GetPot() const
-//{
-//	return _pImpl->GetSymbol("pot");
 //}

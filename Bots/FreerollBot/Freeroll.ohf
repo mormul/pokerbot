@@ -1,0 +1,87 @@
+##2011-11-30 20:27:43##
+
+##notes##
+
+
+##dll##
+.\bots\FreerollBot.dll
+
+
+##bankroll##
+0.000000
+
+##defcon##
+0.000000
+
+##rake##
+0.000000
+
+##nit##
+1000
+
+##f$alli##
+dll$alli
+
+##f$swag##
+dll$swag
+
+##f$srai##
+dll$srai
+
+##f$rais##
+dll$rais
+
+##f$call##
+dll$call
+
+##f$prefold##
+0
+
+##f$rebuy##
+0
+
+##f$delay##
+0
+
+##f$chat##
+0
+
+##f$P##
+// Number of opponents for the prwin simulation.
+
+(nopponentsplaying==0) ? 0 : 
+nopponentsplaying + defcon*nopponentsfolded
+
+##f$play##
+dll$play
+
+##f$test##
+
+
+##f$debug##
+         11.0000 = elapsed
+
+          1.0000 = sblind
+          2.0000 = bblind
+          2.0000 = bet
+
+          0.0000 = call
+          0.0000 = currentbet
+          0.0000 = balance
+
+          0.0000 = f$evcall
+          0.0000 = f$evrais
+
+         19.0000 = potplayer
+          0.0000 = potcommon
+         19.0000 = pot
+          0.0000 = rake
+
+          0.0000 = chair
+          0.0000 = handrank2652
+          0.0000 = pokerval
+          1.0000 = prwin
+          0.0000 = prlos
+          0.0000 = prtie
+          0.0000 = nopponents
+

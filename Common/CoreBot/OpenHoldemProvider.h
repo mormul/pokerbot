@@ -19,8 +19,10 @@ public:
 	virtual const bool TestHand(const char * pHand0, const char * pHand1, const char * pHand2) const;
 	virtual const bool TestHand(const char * pHand0, const char * pHand1, const char * pHand2, const char * pHand3) const;
 	virtual const bool TestHand(const char * pHand0, const char * pHand1, const char * pHand2, const char * pHand3, const char * pHand4) const;
+	virtual const bool TestHand(const char * pHand0, const char * pHand1, const char * pHand2, const char * pHand3, const char * pHand4, const char * pHand5) const;
 
 	virtual const double GetBigBlind(void) const;
+	virtual const double GetPot(void) const;
 	virtual const BetRound GetBetRound(void) const;
 
 	virtual const double GetBalance(void) const;
@@ -36,12 +38,16 @@ public:
 	virtual const double GetNumberOpponentsBetting(void) const;
 	virtual const double GetNumberOpponentsFolded(void) const;
 
-	virtual const bool IsMiddlePair() const;
-	virtual const bool IsTopPair() const;
-	virtual const bool IsOverPair() const;
-	virtual const bool IsOESD() const;
-	virtual const bool IsFlashDro() const;
-	virtual const bool IsMonster() const;
+	virtual const bool IsMiddlePair(void) const;
+	virtual const bool IsTopPair(void) const;
+	virtual const bool IsOverPair(void) const;
+	virtual const bool IsOESD(void) const;
+	virtual const bool IsFlashDro(void) const;
+	virtual const bool IsMonster(void) const;
+
+	virtual const int GetRankHiPocketCard(void) const;
+	virtual const int GetRankLoPocketCard(void) const;
+	virtual const int GetRankHiCommonCard(void) const;
 
 	//const bool IsSeatIn(void) const;
 	//const double GetActiveSeatsCount(void) const;
@@ -57,7 +63,6 @@ public:
 	//const bool WasPlayerDidRaiseOnPreflop() const;
 	//const bool WasPlayerDidRaiseOnFlop() const;
 	//const int GetKicker() const;
-	//const double GetPot() const;
 
 private:
 	OpenHoldemProvider(OpenHoldemProvider &);
