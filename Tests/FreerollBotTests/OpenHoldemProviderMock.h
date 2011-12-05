@@ -38,6 +38,7 @@ public:
 	MOCK_CONST_METHOD0(IsOverPair, const bool (void));
 	MOCK_CONST_METHOD0(IsOESD, const bool (void));
 	MOCK_CONST_METHOD0(IsFlashDro, const bool (void));
+	MOCK_CONST_METHOD0(IsTwoPair, const bool (void));
 	MOCK_CONST_METHOD0(IsMonster, const bool (void));
 
 	MOCK_CONST_METHOD0(GetRankHiPocketCard, const int (void));

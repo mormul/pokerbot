@@ -164,6 +164,9 @@ bool FreerollStrategy::GetAllin(void) const
 				{
 					if (_pProvider->IsMonster())
 						return true;
+					if (_pProvider->IsTwoPair())
+						//&& (_pProvider->GetRankHiPocketCard() >= _pProvider->GetRankHiCommonCard()))
+						return true;
 					else if ((_pProvider->IsFlashDro() || _pProvider->IsOESD())
 						&& (_pProvider->GetNumberOpponentsBetting()
 							+ _pProvider->GetNumberOpponentsCalling()

@@ -60,6 +60,7 @@ public:
 	virtual const bool IsOverPair(void) const = 0;
 	virtual const bool IsOESD(void) const = 0;
 	virtual const bool IsFlashDro(void) const = 0;
+	virtual const bool IsTwoPair(void) const = 0;
 	virtual const bool IsMonster(void) const = 0;
 
 	virtual const int GetRankHiPocketCard(void) const = 0;

@@ -209,7 +209,7 @@ const double OpenHoldemProvider::GetNumberOpponentsFolded(void) const
 
 const bool OpenHoldemProvider::IsMiddlePair(void) const
 {
-	return (_pImpl->GetSymbol("ismidpair") == 1) && (_pImpl->GetSymbol("rankhicommon") < 14);
+	return (_pImpl->GetSymbol("ismidpair") == 1);
 }
 
 const bool OpenHoldemProvider::IsTopPair(void) const
@@ -232,10 +232,14 @@ const bool OpenHoldemProvider::IsFlashDro(void) const
 	return _pImpl->GetSymbol("nsuited") == 4;
 }
 
+const bool OpenHoldemProvider::IsTwoPair(void) const
+{
+	return _pImpl->GetSymbol("istwopair") == 1;
+}
+
 const bool OpenHoldemProvider::IsMonster(void) const
 {
-	return _pImpl->GetSymbol("istwopair") == 1
-		|| _pImpl->GetSymbol("isthreeofakind") == 1
+	return _pImpl->GetSymbol("isthreeofakind") == 1
 		|| _pImpl->GetSymbol("isstraight") == 1
 		|| _pImpl->GetSymbol("isflush") == 1
 		|| _pImpl->GetSymbol("isfullhouse")
