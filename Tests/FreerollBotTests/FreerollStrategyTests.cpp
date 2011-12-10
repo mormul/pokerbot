@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "OpenHoldemProviderMock.h"
 using ::testing::NiceMock;
+using ::testing::StrEq;
 
 #include "FreerollStrategy.cpp"
 
@@ -21,52 +22,103 @@ protected:
 
 	void ExpectFold()
 	{
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetSwag(), 0);
+
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetSrai(), 0);
+
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetCall(), false);
+
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetRais(), false);
+
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetAllin(), false);
 	}
 
 	void ExpectCall()
 	{
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetSwag(), 0);
+
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetSrai(), 0);
+
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetCall(), true);
+
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetRais(), false);
+
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetAllin(), false);
 	}
 
 	void ExpectRais4bb(void)
 	{
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetSwag(), 8);
+
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetSrai(), 8);
+
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetCall(), true);
+
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetRais(), true);
+
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetAllin(), false);
 	}
 
 	void ExpectRais1or2of3ofPot(void)
 	{
+		_strategy.ClearCache();
 		double swag = _strategy.GetSwag();
+
+		_strategy.ClearCache();
 		double srai = _strategy.GetSrai();
+
 		EXPECT_EQ(swag > 3, true);
 		EXPECT_EQ(swag < 7, true);
 		EXPECT_EQ(srai > 3, true);
 		EXPECT_EQ(srai < 7, true);
+
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetCall(), true);
+
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetRais(), true);
+
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetAllin(), false);
 	}
 
 	void ExpectAllIn(void)
 	{
 		double balance = _provider.GetBalance();
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetSwag(), balance);
+
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetSrai(), balance);
+
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetCall(), true);
+
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetRais(), true);
+
+		_strategy.ClearCache();
 		EXPECT_EQ(_strategy.GetAllin(), true);
+	}
+
+	void ExpectEarlyStageLogRecord(const int times)
+	{
+		EXPECT_CALL(_provider, WriteLog(StrEq("BigBlind(2) * 25 < Balance(200) => TourneyStageEarly"))).Times(times);
 	}
 
 	FreerollStrategy					_strategy;
@@ -76,6 +128,7 @@ protected:
 //    Ранняя стадия: размеры стэков по сравнению с блайндами довольно велики. У вас больше 25 больших блайндов.
 TEST_F(FreerollStrategyTests, should_return_early_stage_when_I_have_more_that_25_big_blindes)
 {
+	ExpectEarlyStageLogRecord(1);
 	EXPECT_EQ(_strategy.TourneyStage, TourneyStageEarly);
 }
 
@@ -84,12 +137,14 @@ TEST_F(FreerollStrategyTests, should_return_early_stage_when_I_have_more_that_25
 TEST_F(FreerollStrategyTests, should_return_late_stage_when_I_have_less_that_25_big_blindes)
 {
 	ON_CALL(_provider, GetBalance()).WillByDefault(Return(20));
+	EXPECT_CALL(_provider, WriteLog(StrEq("BigBlind(2) * 25 >= Balance(20) => TourneyStageLate")));
 	EXPECT_EQ(_strategy.TourneyStage, TourneyStageLate);
 }
 
 TEST_F(FreerollStrategyTests, should_return_late_stage_when_I_have_25_big_blindes)
 {
 	ON_CALL(_provider, GetBalance()).WillByDefault(Return(50));
+	EXPECT_CALL(_provider, WriteLog(StrEq("BigBlind(2) * 25 >= Balance(50) => TourneyStageLate")));
 	EXPECT_EQ(_strategy.TourneyStage, TourneyStageLate);
 }
 
@@ -98,6 +153,7 @@ TEST_F(FreerollStrategyTests, should_return_late_stage_when_I_have_25_big_blinde
 TEST_F(FreerollStrategyTests, should_return_final_stage_when_I_press_f0)
 {
 	ON_CALL(_provider, GetFlagButtonState(0)).WillByDefault(Return(true));
+	EXPECT_CALL(_provider, WriteLog(StrEq("F0 pressed => TourneyStageFinal")));
 	EXPECT_EQ(_strategy.TourneyStage, TourneyStageFinal);
 }
 
@@ -107,6 +163,8 @@ TEST_F(FreerollStrategyTests, should_return_final_stage_when_I_press_f0)
 TEST_F(FreerollStrategyTests, should_always_went_allin_with_AA_KK_QQ_AK)
 {
 	ON_CALL(_provider, TestHand("AA", "KK", "QQ", "AK")).WillByDefault(Return(true));
+	ExpectEarlyStageLogRecord(5);
+	EXPECT_CALL(_provider, WriteLog(StrEq("AA, KK, QQ, AK => always AllIn"))).Times(5);
 	ExpectAllIn();
 }
 
@@ -116,6 +174,9 @@ TEST_F(FreerollStrategyTests, should_went_allin_with_JJ_AQ_when_pot_is_not_raise
 {
 	ON_CALL(_provider, TestHand("JJ", "AQ")).WillByDefault(Return(true));
 	ON_CALL(_provider, GetOpponentBet(_)).WillByDefault(Return(2));
+	ExpectEarlyStageLogRecord(5);
+	EXPECT_CALL(_provider, WriteLog(StrEq("GetOpponentBet: ch0=2,ch1=2,ch2=2,ch3=2,ch4=2,ch5=2,ch6=2,ch7=2,ch8=2,ch9=2, => IsRaisedPot=0"))).Times(5);
+	EXPECT_CALL(_provider, WriteLog(StrEq("JJ, AQ and Pot is not raised => AllIn"))).Times(5);
 	ExpectAllIn();
 }
 
@@ -124,6 +185,9 @@ TEST_F(FreerollStrategyTests, should_not_went_allin_with_JJ_AQ_when_pot_is_raise
 	ON_CALL(_provider, TestHand("JJ", "AQ")).WillByDefault(Return(true));
 	ON_CALL(_provider, GetOpponentBet(_)).WillByDefault(Return(0));
 	ON_CALL(_provider, GetOpponentBet(3)).WillByDefault(Return(10));
+	ExpectEarlyStageLogRecord(5);
+	EXPECT_CALL(_provider, WriteLog(StrEq("GetOpponentBet: ch0=0,ch1=0,ch2=0,ch3=10, => IsRaisedPot=1"))).Times(5);
+	EXPECT_CALL(_provider, WriteLog(StrEq("JJ, AQ and Pot is raised => Fold"))).Times(5);
 	ExpectFold();
 }
 

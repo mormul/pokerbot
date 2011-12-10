@@ -8,6 +8,8 @@ public:
 	IOpenHoldemStrategy(void) :_pProvider(NULL) { }
 	virtual ~IOpenHoldemStrategy(void) = 0 { }
 
+	virtual void ClearCache(void) const = 0;
+
 	virtual void SetProvider(const IOpenHoldemProvider * pProvider) { _pProvider = pProvider; }
 	virtual int GetPlay(void) const { return -1; }
 	virtual double GetSwag(void) const { return 0; }
@@ -18,6 +20,7 @@ public:
 
 	virtual double ProcessQuery(const char* pQuery) const
 	{
+		ClearCache();
 		if(!pQuery) return 0;
 		else if(strcmp(pQuery, "dll$play") == 0) return GetPlay();
 		else if(strcmp(pQuery, "dll$swag") == 0) return GetSwag();

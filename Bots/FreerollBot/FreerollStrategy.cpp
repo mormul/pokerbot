@@ -4,10 +4,17 @@
 
 FreerollStrategy::FreerollStrategy(void)
 {
+	ClearCache();
 }
 
 FreerollStrategy::~FreerollStrategy(void)
 {
+}
+
+void FreerollStrategy::ClearCache(void) const
+{
+	_tourneyStageCache = TourneyStageUnknown;
+	_isRaisedPotCache = -1;
 }
 
 double FreerollStrategy::GetSwag(void) const
@@ -139,6 +146,8 @@ bool FreerollStrategy::GetRais(void) const
 
 bool FreerollStrategy::GetAllin(void) const
 {
+	bool result = false;
+
 	switch(TourneyStage)
 	{
 	case TourneyStageEarly:
@@ -148,9 +157,17 @@ bool FreerollStrategy::GetAllin(void) const
 			case BetRoundPreflop:
 				{
 					if (_pProvider->TestHand("AA", "KK", "QQ", "AK"))
-						return true;
-					else if (_pProvider->TestHand("JJ", "AQ") && !IsRaisedPot())
-						return true;
+					{
+						_log << "AA, KK, QQ, AK => always AllIn";
+						result = true;
+					}
+					else if (_pProvider->TestHand("JJ", "AQ"))
+					{
+						if (result = !IsRaisedPot())
+							_log << "JJ, AQ and Pot is not raised => AllIn";
+						else
+							_log << "JJ, AQ and Pot is raised => Fold";
+					}
 					else if (!IsRaisedPot()
 							&&_pProvider->GetPreflopPosition() != PreflopPositionEarly
 							&& _pProvider->GetBalance() < 8 *_pProvider->GetBigBlind()
@@ -214,38 +231,64 @@ bool FreerollStrategy::GetAllin(void) const
 		break;
 	}
 
-	return false;
+	FlushLog();
+	return result;
 }
 
 ::TourneyStage FreerollStrategy::TourneyStage_get(void) const
 {
-	::TourneyStage result = TourneyStageUnknown;
+	if (_tourneyStageCache == TourneyStageUnknown)
+	{
+		double balance = _pProvider->GetBalance();
+		double bigBlind = _pProvider->GetBigBlind();
 
-	if (_pProvider->GetFlagButtonState(0))
-	{
-		result = TourneyStageFinal;
-	}
-	else if (_pProvider->GetBalance() > 25 * _pProvider->GetBigBlind())
-	{
-		result = TourneyStageEarly;
-	}
-	else
-	{
-		result = TourneyStageLate;
+		if (_pProvider->GetFlagButtonState(0))
+		{
+			_tourneyStageCache = TourneyStageFinal;
+			_log << "F0 pressed => TourneyStageFinal";
+		}
+		else if (balance > 25 * bigBlind)
+		{
+			_tourneyStageCache = TourneyStageEarly;
+			_log << "BigBlind(" << bigBlind << ") * 25 < Balance(" << balance << ") => TourneyStageEarly";
+		}
+		else
+		{
+			_tourneyStageCache = TourneyStageLate;
+			_log << "BigBlind(" << bigBlind << ") * 25 >= Balance(" << balance << ") => TourneyStageLate";
+		}
+		FlushLog();
 	}
 
-	return result;
+	return _tourneyStageCache;
 }
 
 bool FreerollStrategy::IsRaisedPot(void) const
 {
-	double bigBlind = _pProvider->GetBigBlind();
-	for (int i = 0; i < 10; ++i)
+	if (_isRaisedPotCache == -1)
 	{
-		if (_pProvider->GetOpponentBet(i) > bigBlind)
+		_isRaisedPotCache = 0;
+		_log << "GetOpponentBet: ";
+		double bigBlind = _pProvider->GetBigBlind();
+		for (int i = 0; i < 10; ++i)
 		{
-			return true;
+			double bet = _pProvider->GetOpponentBet(i);
+			_log << "ch" << i << "=" << bet << ",";
+			if (bet > bigBlind)
+			{
+				_isRaisedPotCache = 1;
+				break;
+			}
 		}
+		_log << " => IsRaisedPot=" << _isRaisedPotCache;
+		FlushLog();
 	}
-	return false;
+
+	return _isRaisedPotCache == 1;
+}
+
+void FreerollStrategy::FlushLog(void) const
+{
+	_pProvider->WriteLog(_log);
+	_log.str("");
 }

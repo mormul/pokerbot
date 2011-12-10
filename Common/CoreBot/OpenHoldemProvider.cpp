@@ -98,23 +98,22 @@ double OpenHoldemProvider::ProcessMessage(const char* pmessage, const void* para
 	return 0;
 }
 
-#include <string>
-template <typename T>
-std::string Format(std::string format, T val1)
+void OpenHoldemProvider::WriteLog(const char * pMessage) const
 {
-	char buffer[512];
-	sprintf_s(buffer, sizeof(buffer), format.c_str(), val1);
-	return buffer;
 }
 
 const bool OpenHoldemProvider::GetFlagButtonState(int index) const
 {
-	return _pImpl->GetSymbol(Format("f%d", index).c_str()) != 0;
+	std::ostringstream s;
+	s << "f" << index;
+	return _pImpl->GetSymbol(s.str().c_str()) != 0;
 }
 
 const bool OpenHoldemProvider::TestHand(const char * pHand) const
 {
-	return _pImpl->GetSymbol(Format("$%s", pHand).c_str()) != 0;
+	std::ostringstream s;
+	s << "$" << pHand;
+	return _pImpl->GetSymbol(s.str().c_str()) != 0;
 }
 
 const bool OpenHoldemProvider::TestHand(const char * pHand0, const char * pHand1) const
@@ -164,7 +163,9 @@ const double OpenHoldemProvider::GetBalance(void) const
 
 const double OpenHoldemProvider::GetOpponentBalance(int chair) const
 {
-	return _pImpl->GetSymbol(Format("balance%d", chair).c_str());
+	std::ostringstream s;
+	s << "balance" << chair;
+	return _pImpl->GetSymbol(s.str().c_str());
 }
 
 const double OpenHoldemProvider::GetBet(void) const
@@ -174,7 +175,9 @@ const double OpenHoldemProvider::GetBet(void) const
 
 const double OpenHoldemProvider::GetOpponentBet(int chair) const
 {
-	return _pImpl->GetSymbol(Format("currentbet%d", chair).c_str());
+	std::ostringstream s;
+	s << "currentbet" << chair;
+	return _pImpl->GetSymbol(s.str().c_str());
 }
 
 const PreflopPosition OpenHoldemProvider::GetPreflopPosition(void) const

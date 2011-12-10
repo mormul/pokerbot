@@ -11,3 +11,4 @@
 #include <windows.h>
 
 #include <memory>
+#include <sstream>

@@ -29,6 +29,9 @@ public:
 	virtual ~IOpenHoldemProvider(void) = 0 { }
 	void SetStrategy(const IOpenHoldemStrategy * pStrategy) { _pStrategy = pStrategy; }
 
+	virtual void WriteLog(const char * pMessage) const = 0;
+	void WriteLog(const std::ostringstream & messageStream) const { WriteLog(messageStream.str().c_str()); }
+
 	virtual const bool GetFlagButtonState(int index) const = 0;
 
 	virtual const bool TestHand(const char * pHand) const = 0;
