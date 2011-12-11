@@ -10,8 +10,14 @@
 class OpenHoldemProviderImpl
 {
 public:
-	OpenHoldemProviderImpl() : 	_p_get_symbol(0), _ndx(0) { }
-	~OpenHoldemProviderImpl() { }
+	OpenHoldemProviderImpl() : 	_p_get_symbol(0), _ndx(0)
+	{
+	}
+
+	~OpenHoldemProviderImpl()
+	{
+	}
+
 	void SetCallBack(p_getsym_t p_get_symbol) { _p_get_symbol = p_get_symbol; }
 
 	void ProcessState(holdem_state* pState)
@@ -96,10 +102,6 @@ double OpenHoldemProvider::ProcessMessage(const char* pmessage, const void* para
 	}
 
 	return 0;
-}
-
-void OpenHoldemProvider::WriteLog(const char * pMessage) const
-{
 }
 
 const bool OpenHoldemProvider::GetFlagButtonState(int index) const

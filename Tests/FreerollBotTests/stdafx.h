@@ -12,5 +12,7 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+using ::testing::NiceMock;
 using ::testing::Return;
+using ::testing::StrEq;
 using ::testing::_;

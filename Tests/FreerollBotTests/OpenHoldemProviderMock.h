@@ -7,8 +7,6 @@ public:
 	OpenHoldemProviderMock(void) { }
 	~OpenHoldemProviderMock(void) { }
 
-	MOCK_CONST_METHOD1(WriteLog, void (const char * pMessage));
-
 	MOCK_CONST_METHOD1(GetFlagButtonState, const bool(int index));
 
 	MOCK_CONST_METHOD1(TestHand, const bool (const char * pHand));

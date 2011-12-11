@@ -19,6 +19,9 @@ void FreerollStrategy::ClearCache(void) const
 
 double FreerollStrategy::GetSwag(void) const
 {
+	double result = 0;
+	double bb = _pProvider->GetBigBlind();
+
 	if (GetAllin())
 		return _pProvider->GetBalance();
 
@@ -30,17 +33,27 @@ double FreerollStrategy::GetSwag(void) const
 			{
 			case BetRoundPreflop:
 				{
-					if (!IsRaisedPot()
-						&& _pProvider->GetPreflopPosition() != PreflopPositionEarly
-						&& _pProvider->TestHand("66", "77", "88", "99", "TT"))
-						return _pProvider->GetBigBlind() * 4;
+					if (_pProvider->TestHand("66", "77", "88", "99", "TT"))
+					{
+						bool isRaisedPot = IsRaisedPot();
+						_log << "66, 77, 88, 99, TT";
+						if (_pProvider->GetPreflopPosition() != PreflopPositionEarly)
+						{
+							_log << " and PreflopPosition is not Early";
+							if (!isRaisedPot)
+							{
+								result = bb * 4;
+								_log << " and Pot is not raised => 4*bb(" << bb << ")=" << result;
+							}
+							else _log << " and Pot is raised => Fold";
+						}
+						else _log << " and PreflopPosition is Early => Fold";
+					}
 				}
 				break;
 			case BetRoundFlop:
 			case BetRoundRiver:
 			case BetRoundTurn:
-				{
-				}
 				break;
 			}
 		}
@@ -77,7 +90,8 @@ double FreerollStrategy::GetSwag(void) const
 		break;
 	}
 
-	return 0;
+	FlushLog();
+	return result;
 }
 
 double FreerollStrategy::GetSrai(void) const
@@ -168,11 +182,11 @@ bool FreerollStrategy::GetAllin(void) const
 						else
 							_log << "JJ, AQ and Pot is raised => Fold";
 					}
-					else if (!IsRaisedPot()
-							&&_pProvider->GetPreflopPosition() != PreflopPositionEarly
-							&& _pProvider->GetBalance() < 8 *_pProvider->GetBigBlind()
-							&& _pProvider->TestHand("66", "77", "88", "99", "TT"))
-						return true;
+					//else if (!IsRaisedPot()
+					//		&&_pProvider->GetPreflopPosition() != PreflopPositionEarly
+					//		&& _pProvider->GetBalance() < 8 *_pProvider->GetBigBlind()
+					//		&& _pProvider->TestHand("66", "77", "88", "99", "TT"))
+					//	return true;
 				}
 				break;
 			case BetRoundFlop:
@@ -289,6 +303,9 @@ bool FreerollStrategy::IsRaisedPot(void) const
 
 void FreerollStrategy::FlushLog(void) const
 {
-	_pProvider->WriteLog(_log);
-	_log.str("");
+	if (_log.str().size())
+	{
+		_pProvider->WriteLog(_log);
+		_log.str("");
+	}
 }

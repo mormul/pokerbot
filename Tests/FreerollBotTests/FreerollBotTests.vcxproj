@@ -94,6 +94,7 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="LoggerMock.h" />
     <ClInclude Include="OpenHoldemProviderMock.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />

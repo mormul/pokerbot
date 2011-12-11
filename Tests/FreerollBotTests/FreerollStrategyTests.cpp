@@ -1,7 +1,5 @@
 #include "StdAfx.h"
 #include "OpenHoldemProviderMock.h"
-using ::testing::NiceMock;
-using ::testing::StrEq;
 
 #include "FreerollStrategy.cpp"
 
@@ -22,103 +20,57 @@ protected:
 
 	void ExpectFold()
 	{
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetSwag(), 0);
-
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetSrai(), 0);
-
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetCall(), false);
-
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetRais(), false);
-
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetAllin(), false);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$swag"), 0);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$srai"), 0);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$call"), 0);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$rais"), 0);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$alli"), 0);
 	}
 
 	void ExpectCall()
 	{
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetSwag(), 0);
-
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetSrai(), 0);
-
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetCall(), true);
-
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetRais(), false);
-
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetAllin(), false);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$swag"), 0);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$srai"), 0);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$call"), 1);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$rais"), 0);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$alli"), 0);
 	}
 
 	void ExpectRais4bb(void)
 	{
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetSwag(), 8);
-
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetSrai(), 8);
-
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetCall(), true);
-
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetRais(), true);
-
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetAllin(), false);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$swag"), 8);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$srai"), 8);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$call"), 1);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$rais"), 1);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$alli"), 0);
 	}
 
 	void ExpectRais1or2of3ofPot(void)
 	{
-		_strategy.ClearCache();
-		double swag = _strategy.GetSwag();
-
-		_strategy.ClearCache();
-		double srai = _strategy.GetSrai();
-
+		double swag = _strategy.ProcessQuery("dll$swag");
+		double srai = _strategy.ProcessQuery("dll$srai");
 		EXPECT_EQ(swag > 3, true);
 		EXPECT_EQ(swag < 7, true);
 		EXPECT_EQ(srai > 3, true);
 		EXPECT_EQ(srai < 7, true);
-
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetCall(), true);
-
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetRais(), true);
-
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetAllin(), false);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$call"), 1);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$rais"), 1);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$alli"), 0);
 	}
 
 	void ExpectAllIn(void)
 	{
 		double balance = _provider.GetBalance();
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetSwag(), balance);
-
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetSrai(), balance);
-
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetCall(), true);
-
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetRais(), true);
-
-		_strategy.ClearCache();
-		EXPECT_EQ(_strategy.GetAllin(), true);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$swag"), balance);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$srai"), balance);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$call"), 1);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$rais"), 1);
+		EXPECT_EQ(_strategy.ProcessQuery("dll$alli"), 1);
 	}
 
 	void ExpectEarlyStageLogRecord(const int times)
 	{
-		EXPECT_CALL(_provider, WriteLog(StrEq("BigBlind(2) * 25 < Balance(200) => TourneyStageEarly"))).Times(times);
+		//EXPECT_CALL(_provider, WriteLog(StrEq("BigBlind(2) * 25 < Balance(200) => TourneyStageEarly"))).Times(times);
 	}
 
 	FreerollStrategy					_strategy;
@@ -137,14 +89,14 @@ TEST_F(FreerollStrategyTests, should_return_early_stage_when_I_have_more_that_25
 TEST_F(FreerollStrategyTests, should_return_late_stage_when_I_have_less_that_25_big_blindes)
 {
 	ON_CALL(_provider, GetBalance()).WillByDefault(Return(20));
-	EXPECT_CALL(_provider, WriteLog(StrEq("BigBlind(2) * 25 >= Balance(20) => TourneyStageLate")));
+	//EXPECT_CALL(_provider, WriteLog(StrEq("BigBlind(2) * 25 >= Balance(20) => TourneyStageLate")));
 	EXPECT_EQ(_strategy.TourneyStage, TourneyStageLate);
 }
 
 TEST_F(FreerollStrategyTests, should_return_late_stage_when_I_have_25_big_blindes)
 {
 	ON_CALL(_provider, GetBalance()).WillByDefault(Return(50));
-	EXPECT_CALL(_provider, WriteLog(StrEq("BigBlind(2) * 25 >= Balance(50) => TourneyStageLate")));
+	//EXPECT_CALL(_provider, WriteLog(StrEq("BigBlind(2) * 25 >= Balance(50) => TourneyStageLate")));
 	EXPECT_EQ(_strategy.TourneyStage, TourneyStageLate);
 }
 
@@ -153,7 +105,7 @@ TEST_F(FreerollStrategyTests, should_return_late_stage_when_I_have_25_big_blinde
 TEST_F(FreerollStrategyTests, should_return_final_stage_when_I_press_f0)
 {
 	ON_CALL(_provider, GetFlagButtonState(0)).WillByDefault(Return(true));
-	EXPECT_CALL(_provider, WriteLog(StrEq("F0 pressed => TourneyStageFinal")));
+	//EXPECT_CALL(_provider, WriteLog(StrEq("F0 pressed => TourneyStageFinal")));
 	EXPECT_EQ(_strategy.TourneyStage, TourneyStageFinal);
 }
 
@@ -164,7 +116,7 @@ TEST_F(FreerollStrategyTests, should_always_went_allin_with_AA_KK_QQ_AK)
 {
 	ON_CALL(_provider, TestHand("AA", "KK", "QQ", "AK")).WillByDefault(Return(true));
 	ExpectEarlyStageLogRecord(5);
-	EXPECT_CALL(_provider, WriteLog(StrEq("AA, KK, QQ, AK => always AllIn"))).Times(5);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("AA, KK, QQ, AK => always AllIn"))).Times(5);
 	ExpectAllIn();
 }
 
@@ -175,8 +127,8 @@ TEST_F(FreerollStrategyTests, should_went_allin_with_JJ_AQ_when_pot_is_not_raise
 	ON_CALL(_provider, TestHand("JJ", "AQ")).WillByDefault(Return(true));
 	ON_CALL(_provider, GetOpponentBet(_)).WillByDefault(Return(2));
 	ExpectEarlyStageLogRecord(5);
-	EXPECT_CALL(_provider, WriteLog(StrEq("GetOpponentBet: ch0=2,ch1=2,ch2=2,ch3=2,ch4=2,ch5=2,ch6=2,ch7=2,ch8=2,ch9=2, => IsRaisedPot=0"))).Times(5);
-	EXPECT_CALL(_provider, WriteLog(StrEq("JJ, AQ and Pot is not raised => AllIn"))).Times(5);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("GetOpponentBet: ch0=2,ch1=2,ch2=2,ch3=2,ch4=2,ch5=2,ch6=2,ch7=2,ch8=2,ch9=2, => IsRaisedPot=0"))).Times(5);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("JJ, AQ and Pot is not raised => AllIn"))).Times(5);
 	ExpectAllIn();
 }
 
@@ -186,8 +138,8 @@ TEST_F(FreerollStrategyTests, should_not_went_allin_with_JJ_AQ_when_pot_is_raise
 	ON_CALL(_provider, GetOpponentBet(_)).WillByDefault(Return(0));
 	ON_CALL(_provider, GetOpponentBet(3)).WillByDefault(Return(10));
 	ExpectEarlyStageLogRecord(5);
-	EXPECT_CALL(_provider, WriteLog(StrEq("GetOpponentBet: ch0=0,ch1=0,ch2=0,ch3=10, => IsRaisedPot=1"))).Times(5);
-	EXPECT_CALL(_provider, WriteLog(StrEq("JJ, AQ and Pot is raised => Fold"))).Times(5);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("GetOpponentBet: ch0=0,ch1=0,ch2=0,ch3=10, => IsRaisedPot=1"))).Times(5);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("JJ, AQ and Pot is raised => Fold"))).Times(5);
 	ExpectFold();
 }
 
@@ -198,6 +150,9 @@ TEST_F(FreerollStrategyTests, should_rais_to_4bb_with_66_77_88_99_TT_when_pot_is
 {
 	ON_CALL(_provider, TestHand("66", "77", "88", "99", "TT")).WillByDefault(Return(true));
 	ON_CALL(_provider, GetOpponentBet(_)).WillByDefault(Return(2));
+	ExpectEarlyStageLogRecord(5);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("GetOpponentBet: ch0=2,ch1=2,ch2=2,ch3=2,ch4=2,ch5=2,ch6=2,ch7=2,ch8=2,ch9=2, => IsRaisedPot=0"))).Times(4);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("66, 77, 88, 99, TT and PreflopPosition is not Early and Pot is not raised => 4*bb(2)=8"))).Times(4);
 	ExpectRais4bb();
 }
 
@@ -206,6 +161,9 @@ TEST_F(FreerollStrategyTests, should_not_rais_with_66_77_88_99_TT_when_pot_is_ra
 	ON_CALL(_provider, TestHand("66", "77", "88", "99", "TT")).WillByDefault(Return(true));
 	ON_CALL(_provider, GetOpponentBet(_)).WillByDefault(Return(0));
 	ON_CALL(_provider, GetOpponentBet(3)).WillByDefault(Return(10));
+	ExpectEarlyStageLogRecord(5);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("GetOpponentBet: ch0=0,ch1=0,ch2=0,ch3=10, => IsRaisedPot=1"))).Times(4);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("66, 77, 88, 99, TT and PreflopPosition is not Early and Pot is raised => Fold"))).Times(4);
 	ExpectFold();
 }
 
@@ -214,6 +172,9 @@ TEST_F(FreerollStrategyTests, should_not_rais_with_66_77_88_99_TT_in_early_posit
 	ON_CALL(_provider, TestHand("66", "77", "88", "99", "TT")).WillByDefault(Return(true));
 	ON_CALL(_provider, GetOpponentBet(_)).WillByDefault(Return(2));
 	ON_CALL(_provider, GetPreflopPosition()).WillByDefault(Return(PreflopPositionEarly));
+	ExpectEarlyStageLogRecord(5);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("GetOpponentBet: ch0=2,ch1=2,ch2=2,ch3=2,ch4=2,ch5=2,ch6=2,ch7=2,ch8=2,ch9=2, => IsRaisedPot=0"))).Times(4);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("66, 77, 88, 99, TT and PreflopPosition is Early => Fold"))).Times(4);
 	ExpectFold();
 }
 
@@ -222,35 +183,135 @@ TEST_F(FreerollStrategyTests, should_not_rais_with_66_77_88_99_TT_in_early_posit
 //одномастными тузами и с так называемыми одномастными коннекторами, средними и старшими.
 //Это одномастные карты, находящиеся рядом друг с другом по ценности, например, 76 или QJ.
 
-TEST_F(FreerollStrategyTests, should_call_with_22_33_44_55_AXs_KQs_QJs_JTs_T9s_98s_87s_76s_when_pot_is_not_raised_in_late_position)
+TEST_F(FreerollStrategyTests, should_call_with_22_33_44_55_AXs_KQs_when_pot_is_not_raised_in_dealer_position)
 {
 	ON_CALL(_provider, TestHand("22", "33", "44", "55", "AXs", "KQs")).WillByDefault(Return(true));
+	ON_CALL(_provider, GetOpponentBet(_)).WillByDefault(Return(2));
+
+	ON_CALL(_provider, GetPreflopPosition()).WillByDefault(Return(PreflopPositionDealer));
+	ExpectEarlyStageLogRecord(5);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("GetOpponentBet: ch0=2,ch1=2,ch2=2,ch3=2,ch4=2,ch5=2,ch6=2,ch7=2,ch8=2,ch9=2, => IsRaisedPot=0"))).Times(1);
+	ExpectCall();
+}
+
+TEST_F(FreerollStrategyTests, should_call_with_22_33_44_55_AXs_KQs_when_pot_is_not_raised_in_late_position)
+{
+	ON_CALL(_provider, TestHand("22", "33", "44", "55", "AXs", "KQs")).WillByDefault(Return(true));
+	ON_CALL(_provider, GetOpponentBet(_)).WillByDefault(Return(2));
+
+	ON_CALL(_provider, GetPreflopPosition()).WillByDefault(Return(PreflopPositionLate));
+	ExpectEarlyStageLogRecord(5);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("GetOpponentBet: ch0=2,ch1=2,ch2=2,ch3=2,ch4=2,ch5=2,ch6=2,ch7=2,ch8=2,ch9=2, => IsRaisedPot=0"))).Times(1);
+	ExpectCall();
+}
+
+TEST_F(FreerollStrategyTests, should_call_with_22_33_44_55_AXs_KQs_when_pot_is_not_raised_in_big_blind_position)
+{
+	ON_CALL(_provider, TestHand("22", "33", "44", "55", "AXs", "KQs")).WillByDefault(Return(true));
+	ON_CALL(_provider, GetOpponentBet(_)).WillByDefault(Return(2));
+
+	ON_CALL(_provider, GetPreflopPosition()).WillByDefault(Return(PreflopPositionBigBlind));
+	ExpectEarlyStageLogRecord(5);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("GetOpponentBet: ch0=2,ch1=2,ch2=2,ch3=2,ch4=2,ch5=2,ch6=2,ch7=2,ch8=2,ch9=2, => IsRaisedPot=0"))).Times(1);
+	ExpectCall();
+}
+
+TEST_F(FreerollStrategyTests, should_call_with_22_33_44_55_AXs_KQs_when_pot_is_not_raised_in_small_blind_position)
+{
+	ON_CALL(_provider, TestHand("22", "33", "44", "55", "AXs", "KQs")).WillByDefault(Return(true));
+	ON_CALL(_provider, GetOpponentBet(_)).WillByDefault(Return(2));
+
+	ON_CALL(_provider, GetPreflopPosition()).WillByDefault(Return(PreflopPositionSmallBlind));
+	ExpectEarlyStageLogRecord(5);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("GetOpponentBet: ch0=2,ch1=2,ch2=2,ch3=2,ch4=2,ch5=2,ch6=2,ch7=2,ch8=2,ch9=2, => IsRaisedPot=0"))).Times(1);
+	ExpectCall();
+}
+
+TEST_F(FreerollStrategyTests, should_fold_with_22_33_44_55_AXs_KQs_when_pot_is_not_raised_in_early_position)
+{
+	ON_CALL(_provider, TestHand("22", "33", "44", "55", "AXs", "KQs")).WillByDefault(Return(true));
+	ON_CALL(_provider, GetOpponentBet(_)).WillByDefault(Return(2));
+
+	ON_CALL(_provider, GetPreflopPosition()).WillByDefault(Return(PreflopPositionEarly));
+	ExpectEarlyStageLogRecord(5);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("GetOpponentBet: ch0=2,ch1=2,ch2=2,ch3=2,ch4=2,ch5=2,ch6=2,ch7=2,ch8=2,ch9=2, => IsRaisedPot=0"))).Times(1);
+	ExpectFold();
+}
+
+TEST_F(FreerollStrategyTests, should_fold_with_22_33_44_55_AXs_KQs_when_pot_is_not_raised_in_middle_position)
+{
+	ON_CALL(_provider, TestHand("22", "33", "44", "55", "AXs", "KQs")).WillByDefault(Return(true));
+	ON_CALL(_provider, GetOpponentBet(_)).WillByDefault(Return(2));
+
+	ON_CALL(_provider, GetPreflopPosition()).WillByDefault(Return(PreflopPositionMiddle));
+	ExpectEarlyStageLogRecord(5);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("GetOpponentBet: ch0=2,ch1=2,ch2=2,ch3=2,ch4=2,ch5=2,ch6=2,ch7=2,ch8=2,ch9=2, => IsRaisedPot=0"))).Times(1);
+	ExpectFold();
+}
+
+TEST_F(FreerollStrategyTests, should_call_with_QJs_JTs_T9s_98s_87s_76s_when_pot_is_not_raised_in_dealer_position)
+{
 	ON_CALL(_provider, TestHand("QJs", "JTs", "T9s", "98s", "87s", "76s")).WillByDefault(Return(true));
 	ON_CALL(_provider, GetOpponentBet(_)).WillByDefault(Return(2));
 
 	ON_CALL(_provider, GetPreflopPosition()).WillByDefault(Return(PreflopPositionDealer));
-	ExpectCall();
-
-	ON_CALL(_provider, GetPreflopPosition()).WillByDefault(Return(PreflopPositionLate));
-	ExpectCall();
-
-	ON_CALL(_provider, GetPreflopPosition()).WillByDefault(Return(PreflopPositionBigBlind));
-	ExpectCall();
-
-	ON_CALL(_provider, GetPreflopPosition()).WillByDefault(Return(PreflopPositionSmallBlind));
+	ExpectEarlyStageLogRecord(5);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("GetOpponentBet: ch0=2,ch1=2,ch2=2,ch3=2,ch4=2,ch5=2,ch6=2,ch7=2,ch8=2,ch9=2, => IsRaisedPot=0"))).Times(1);
 	ExpectCall();
 }
 
-TEST_F(FreerollStrategyTests, should_fold_with_22_33_44_55_AXs_KQs_QJs_JTs_T9s_98s_87s_76s_when_pot_is_not_raised_in_early_or_middle_position)
+TEST_F(FreerollStrategyTests, should_call_with_QJs_JTs_T9s_98s_87s_76s_when_pot_is_not_raised_in_late_position)
 {
-	ON_CALL(_provider, TestHand("22", "33", "44", "55", "AXs", "KQs")).WillByDefault(Return(true));
+	ON_CALL(_provider, TestHand("QJs", "JTs", "T9s", "98s", "87s", "76s")).WillByDefault(Return(true));
+	ON_CALL(_provider, GetOpponentBet(_)).WillByDefault(Return(2));
+
+	ON_CALL(_provider, GetPreflopPosition()).WillByDefault(Return(PreflopPositionLate));
+	ExpectEarlyStageLogRecord(5);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("GetOpponentBet: ch0=2,ch1=2,ch2=2,ch3=2,ch4=2,ch5=2,ch6=2,ch7=2,ch8=2,ch9=2, => IsRaisedPot=0"))).Times(1);
+	ExpectCall();
+}
+
+TEST_F(FreerollStrategyTests, should_call_with_QJs_JTs_T9s_98s_87s_76s_when_pot_is_not_raised_in_big_blind_position)
+{
+	ON_CALL(_provider, TestHand("QJs", "JTs", "T9s", "98s", "87s", "76s")).WillByDefault(Return(true));
+	ON_CALL(_provider, GetOpponentBet(_)).WillByDefault(Return(2));
+
+	ON_CALL(_provider, GetPreflopPosition()).WillByDefault(Return(PreflopPositionBigBlind));
+	ExpectEarlyStageLogRecord(5);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("GetOpponentBet: ch0=2,ch1=2,ch2=2,ch3=2,ch4=2,ch5=2,ch6=2,ch7=2,ch8=2,ch9=2, => IsRaisedPot=0"))).Times(1);
+	ExpectCall();
+}
+
+TEST_F(FreerollStrategyTests, should_call_with_QJs_JTs_T9s_98s_87s_76s_when_pot_is_not_raised_in_small_blind_position)
+{
+	ON_CALL(_provider, TestHand("QJs", "JTs", "T9s", "98s", "87s", "76s")).WillByDefault(Return(true));
+	ON_CALL(_provider, GetOpponentBet(_)).WillByDefault(Return(2));
+
+	ON_CALL(_provider, GetPreflopPosition()).WillByDefault(Return(PreflopPositionSmallBlind));
+	ExpectEarlyStageLogRecord(5);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("GetOpponentBet: ch0=2,ch1=2,ch2=2,ch3=2,ch4=2,ch5=2,ch6=2,ch7=2,ch8=2,ch9=2, => IsRaisedPot=0"))).Times(1);
+	ExpectCall();
+}
+
+TEST_F(FreerollStrategyTests, should_fold_with_QJs_JTs_T9s_98s_87s_76s_when_pot_is_not_raised_in_early_position)
+{
+	ON_CALL(_provider, TestHand("QJs", "JTs", "T9s", "98s", "87s", "76s")).WillByDefault(Return(true));
+	ON_CALL(_provider, GetOpponentBet(_)).WillByDefault(Return(2));
+
+	ON_CALL(_provider, GetPreflopPosition()).WillByDefault(Return(PreflopPositionEarly));
+	ExpectEarlyStageLogRecord(5);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("GetOpponentBet: ch0=2,ch1=2,ch2=2,ch3=2,ch4=2,ch5=2,ch6=2,ch7=2,ch8=2,ch9=2, => IsRaisedPot=0"))).Times(1);
+	ExpectFold();
+}
+
+TEST_F(FreerollStrategyTests, should_fold_with_QJs_JTs_T9s_98s_87s_76s_when_pot_is_not_raised_in_middle_position)
+{
 	ON_CALL(_provider, TestHand("QJs", "JTs", "T9s", "98s", "87s", "76s")).WillByDefault(Return(true));
 	ON_CALL(_provider, GetOpponentBet(_)).WillByDefault(Return(2));
 
 	ON_CALL(_provider, GetPreflopPosition()).WillByDefault(Return(PreflopPositionMiddle));
-	ExpectFold();
-
-	ON_CALL(_provider, GetPreflopPosition()).WillByDefault(Return(PreflopPositionEarly));
+	ExpectEarlyStageLogRecord(5);
+	//EXPECT_CALL(_provider, WriteLog(StrEq("GetOpponentBet: ch0=2,ch1=2,ch2=2,ch3=2,ch4=2,ch5=2,ch6=2,ch7=2,ch8=2,ch9=2, => IsRaisedPot=0"))).Times(1);
 	ExpectFold();
 }
 

@@ -1,4 +1,5 @@
 #pragma once
+#include "ILogger.h"
 
 class IOpenHoldemStrategy;
 
@@ -25,11 +26,12 @@ enum PreflopPosition
 class IOpenHoldemProvider
 {
 public:
-	IOpenHoldemProvider(void) : _pStrategy(NULL) { }
+	IOpenHoldemProvider(void) : _pLogger(NULL), _pStrategy(NULL) { }
 	virtual ~IOpenHoldemProvider(void) = 0 { }
+	void SetLogger(const ILogger * pLogger) { _pLogger = pLogger; }
 	void SetStrategy(const IOpenHoldemStrategy * pStrategy) { _pStrategy = pStrategy; }
 
-	virtual void WriteLog(const char * pMessage) const = 0;
+	void WriteLog(const char * pMessage) const { _pLogger ? _pLogger->WriteLog(pMessage) : NULL; }
 	void WriteLog(const std::ostringstream & messageStream) const { WriteLog(messageStream.str().c_str()); }
 
 	virtual const bool GetFlagButtonState(int index) const = 0;
@@ -71,5 +73,6 @@ public:
 	virtual const int GetRankHiCommonCard(void) const = 0;
 
 protected:
-	const IOpenHoldemStrategy * _pStrategy;
+	const ILogger				* _pLogger;
+	const IOpenHoldemStrategy	* _pStrategy;
 };

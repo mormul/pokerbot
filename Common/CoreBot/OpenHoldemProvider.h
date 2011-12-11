@@ -9,8 +9,6 @@ public:
 	OpenHoldemProvider(void);
 	virtual ~OpenHoldemProvider(void);
 
-	virtual void WriteLog(const char * pMessage) const;
-
 	double ProcessMessage(const char* pmessage, const void* param) const;
 
 	virtual const bool GetFlagButtonState(int index) const;

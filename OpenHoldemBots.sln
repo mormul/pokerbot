@@ -18,6 +18,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreerollBotTests", "Tests\F
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreBot", "Common\CoreBot\CoreBot.vcxproj", "{BB324EC2-263D-4568-A02B-9F6308AFD950}"
+	ProjectSection(ProjectDependencies) = postProject
+		{772C2111-BBBF-49E6-B912-198A7F7A88E5} = {772C2111-BBBF-49E6-B912-198A7F7A88E5}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rdParty", "3rdParty", "{E2D908C7-7037-4F5E-A393-5791B0E8DA3F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libglog_static", "3rdParty\google-glog\vsprojects\libglog_static\libglog_static.vcxproj", "{772C2111-BBBF-49E6-B912-198A7F7A88E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +44,10 @@ Global
 		{BB324EC2-263D-4568-A02B-9F6308AFD950}.Debug|Win32.Build.0 = Debug|Win32
 		{BB324EC2-263D-4568-A02B-9F6308AFD950}.Release|Win32.ActiveCfg = Release|Win32
 		{BB324EC2-263D-4568-A02B-9F6308AFD950}.Release|Win32.Build.0 = Release|Win32
+		{772C2111-BBBF-49E6-B912-198A7F7A88E5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{772C2111-BBBF-49E6-B912-198A7F7A88E5}.Debug|Win32.Build.0 = Debug|Win32
+		{772C2111-BBBF-49E6-B912-198A7F7A88E5}.Release|Win32.ActiveCfg = Release|Win32
+		{772C2111-BBBF-49E6-B912-198A7F7A88E5}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,5 +56,6 @@ Global
 		{C66A8BBA-7BFF-4583-AB9D-D3741F8CBA90} = {C9AA7596-9901-4497-B4D0-648AACE7FC41}
 		{BB324EC2-263D-4568-A02B-9F6308AFD950} = {37D0E7A7-AAA2-4871-BC35-D1CCC5E24115}
 		{68103B0A-679F-40CD-A784-AB760EC1A332} = {4D804642-BA8C-4949-A52C-3D064C849BEA}
+		{772C2111-BBBF-49E6-B912-198A7F7A88E5} = {E2D908C7-7037-4F5E-A393-5791B0E8DA3F}
 	EndGlobalSection
 EndGlobal

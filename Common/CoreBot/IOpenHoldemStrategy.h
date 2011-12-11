@@ -11,12 +11,6 @@ public:
 	virtual void ClearCache(void) const = 0;
 
 	virtual void SetProvider(const IOpenHoldemProvider * pProvider) { _pProvider = pProvider; }
-	virtual int GetPlay(void) const { return -1; }
-	virtual double GetSwag(void) const { return 0; }
-	virtual double GetSrai(void) const { return 0; }
-	virtual bool GetCall(void) const { return false; }
-	virtual bool GetRais(void) const { return false; }
-	virtual bool GetAllin(void) const { return false; }
 
 	virtual double ProcessQuery(const char* pQuery) const
 	{
@@ -32,5 +26,12 @@ public:
 	}
 
 protected:
+	virtual int GetPlay(void) const { return -1; }
+	virtual double GetSwag(void) const { return 0; }
+	virtual double GetSrai(void) const { return 0; }
+	virtual bool GetCall(void) const { return false; }
+	virtual bool GetRais(void) const { return false; }
+	virtual bool GetAllin(void) const { return false; }
+
 	const IOpenHoldemProvider * _pProvider;
 };

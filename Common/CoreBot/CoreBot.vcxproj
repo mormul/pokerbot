@@ -45,7 +45,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\OpenHoldem;$(SolutionDir)3rdParty\OpenHoldem\pokereval\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\OpenHoldem;$(SolutionDir)3rdParty\OpenHoldem\pokereval\include;$(SolutionDir)3rdParty\google-glog\src\windows</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -60,7 +60,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\OpenHoldem;$(SolutionDir)3rdParty\OpenHoldem\pokereval\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\OpenHoldem;$(SolutionDir)3rdParty\OpenHoldem\pokereval\include;$(SolutionDir)3rdParty\google-glog\src\windows</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -70,6 +70,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="FileSystemLogger.h" />
+    <ClInclude Include="ILogger.h" />
     <ClInclude Include="IOpenHoldemProvider.h" />
     <ClInclude Include="IOpenHoldemStrategy.h" />
     <ClInclude Include="OpenHoldemProvider.h" />
@@ -77,6 +79,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="FileSystemLogger.cpp" />
     <ClCompile Include="OpenHoldemProvider.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

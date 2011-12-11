@@ -8,6 +8,7 @@
 #include "targetver.h"
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
+#define NOGDI							// For exclude ERROR definition from windows.h -> conflict with glog
 #include <windows.h>
 
 #include <memory>
