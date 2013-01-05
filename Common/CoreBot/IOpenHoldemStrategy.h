@@ -1,6 +1,5 @@
 #pragma once
-
-class IOpenHoldemProvider;
+#include "IOpenHoldemProvider.h"
 
 class IOpenHoldemStrategy
 {
@@ -12,18 +11,7 @@ public:
 
 	virtual void SetProvider(const IOpenHoldemProvider * pProvider) { _pProvider = pProvider; }
 
-	virtual double ProcessQuery(const char* pQuery) const
-	{
-		ClearCache();
-		if(!pQuery) return 0;
-		else if(strcmp(pQuery, "dll$play") == 0) return GetPlay();
-		else if(strcmp(pQuery, "dll$swag") == 0) return GetSwag();
-		else if(strcmp(pQuery, "dll$srai") == 0) return GetSrai();
-		else if(strcmp(pQuery, "dll$call") == 0) return GetCall();
-		else if(strcmp(pQuery, "dll$rais") == 0) return GetRais();
-		else if(strcmp(pQuery, "dll$alli") == 0) return GetAllin();
-		return 0;
-	}
+	virtual double ProcessQuery(const char* pQuery) const;
 
 protected:
 	virtual int GetPlay(void) const { return -1; }
@@ -33,5 +21,9 @@ protected:
 	virtual bool GetRais(void) const { return false; }
 	virtual bool GetAllin(void) const { return false; }
 
+	virtual void PrepareHeaderLog(void) const { }
+	void FlushLog(void) const;
+
+	mutable std::ostringstream _log;
 	const IOpenHoldemProvider * _pProvider;
 };

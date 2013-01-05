@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include <Reference User DLL\user.h>
 #include <poker_defs.h>

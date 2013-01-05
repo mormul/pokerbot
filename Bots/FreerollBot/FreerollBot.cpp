@@ -6,7 +6,6 @@
 #include "FileSystemLogger.h"
 #include "OpenHoldemProvider.h"
 #include "FreerollStrategy.h"
-#pragma comment(lib, "CoreBot.lib")
 
 std::auto_ptr<ILogger> pLogger(NULL);
 std::auto_ptr<IOpenHoldemStrategy> pStrategy(NULL);

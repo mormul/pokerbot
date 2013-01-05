@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "FileSystemLogger.h"
 
 #pragma warning ( push, 2 )

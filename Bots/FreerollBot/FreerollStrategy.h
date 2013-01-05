@@ -27,11 +27,10 @@ protected:
 	virtual bool GetRais(void) const;
 	virtual bool GetAllin(void) const;
 
+	virtual void PrepareHeaderLog(void) const;
+
 private:
 	bool IsRaisedPot(void) const;
-
-	mutable std::ostringstream _log;
-	void FlushLog(void) const;
 
 	mutable ::TourneyStage	_tourneyStageCache;
 	mutable short			_isRaisedPotCache;
