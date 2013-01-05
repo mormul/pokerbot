@@ -1,13 +1,7 @@
-# Compiled Object files
-*.slo
-*.lo
-*.o
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
+Release
+Debug
+/ipch/*
+*.opensdf
+*.sdf
+*.user
+*.suo
